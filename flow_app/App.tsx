@@ -6,9 +6,42 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 
 export default function App() {
+    // Tasks
+    const [enteredTaskText, setEnteredTaskText] = useState("");
+    const [dailyTasks, setDailyTasks] = useState<string[]>([]);
+
+    // Priority
+    const [enteredPriority, setEnteredPriority] = useState("0 - N/A");
+
+    // Time Required
+    const [enteredTimeReq, setTimeReq] = useState("0");
+
+    // Task Objects
+    const [allTaskEntries, setTasks] = useState<{
+        [key: number]: { task: string; priority: string; timeRequired: string };
+    }>({});
+    const [counter, setCounter] = useState(0);
+
+    function taskInputHandler(taskEntered: string) {
+        setEnteredTaskText(taskEntered);
+    }
+
+    function addTaskHandler() {
+        setCounter((prevCounter) => prevCounter + 1);
+        setTasks((prevTasks) => ({
+            ...prevTasks,
+            [counter]: {
+                task: enteredTaskText,
+                priority: enteredPriority,
+                timeRequired: enteredTimeReq,
+            },
+        }));
+    }
+
     return (
         <View style={styles.landingScreenContainer}>
             <View style={styles.todoPageContainer}>
@@ -30,6 +63,7 @@ export default function App() {
                         ]}
                         placeholder="Task Description"
                         placeholderTextColor="white"
+                        onChangeText={taskInputHandler}
                     />
                     <View style={styles.todoExtraInfoContainer}>
                         <TextInput
@@ -49,13 +83,31 @@ export default function App() {
                             placeholderTextColor="white"
                         />
                     </View>
-                    <TouchableOpacity style={styles.taskSubmitButton}>
+                    <TouchableOpacity
+                        style={styles.taskSubmitButton}
+                        onPress={addTaskHandler}
+                    >
                         <Text style={styles.buttonText}>Add to your flow</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.dividerContainer}></View>
                 <View style={styles.todoListContainer}>
-                    <Text style={styles.genericTextContainer}>Flow List</Text>
+                    {Object.keys(allTaskEntries).map((key) => {
+                        const taskEntry = allTaskEntries[key];
+                        return (
+                            <View key={key}>
+                                <Text style={[styles.genericTextContainer]}>
+                                    Task: {taskEntry.task}
+                                </Text>
+                                <Text style={[styles.genericTextContainer]}>
+                                    Priority: {taskEntry.priority}
+                                </Text>
+                                <Text style={[styles.genericTextContainer]}>
+                                    Time Required: {taskEntry.timeRequired}
+                                </Text>
+                            </View>
+                        );
+                    })}
                 </View>
             </View>
         </View>
@@ -82,7 +134,7 @@ const styles = StyleSheet.create({
     todoExtraInfoContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        width: "90%",
+        width: "95%",
     },
     textInputConatiner: {
         backgroundColor: "#1D1825",
@@ -96,7 +148,7 @@ const styles = StyleSheet.create({
         width: "48.5%",
     },
     newTaskInputContainer: {
-        width: "90%",
+        width: "95%",
     },
     todoPageContainer: {
         flexDirection: "column",
@@ -105,10 +157,11 @@ const styles = StyleSheet.create({
     todoListContainer: {
         marginVertical: 20,
         flexDirection: "column",
-        alignItems: "center",
+        width: "90%",
+        margin: "auto",
     },
     taskSubmitButton: {
-        width: "90%",
+        width: "95%",
         height: 40,
         justifyContent: "center",
         alignItems: "center",
