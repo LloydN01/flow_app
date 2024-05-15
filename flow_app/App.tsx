@@ -16,9 +16,11 @@ export default function App() {
 
     // Priority
     const [enteredPriority, setEnteredPriority] = useState("0 - N/A");
+    const [priority, setPriorityArr] = useState<string[]>([]);
 
     // Time Required
     const [enteredTimeReq, setTimeReq] = useState("0");
+    const [timeReq, setTimeReqArr] = useState<string[]>([]);
 
     // Task Objects
     const [allTaskEntries, setTasks] = useState<{
@@ -28,6 +30,14 @@ export default function App() {
 
     function taskInputHandler(taskEntered: string) {
         setEnteredTaskText(taskEntered);
+    }
+
+    function priorityInputHandler(priorityEntered: string) {
+        setEnteredPriority(priorityEntered);
+    }
+
+    function timeReqInputHandler(timeReqEntered: string) {
+        setTimeReq(timeReqEntered);
     }
 
     function addTaskHandler() {
@@ -48,7 +58,7 @@ export default function App() {
                 <View>
                     <Text
                         style={[
-                            styles.genericTextContainer,
+                            styles.genericText,
                             styles.genericTitleContainer,
                         ]}
                     >
@@ -73,6 +83,7 @@ export default function App() {
                             ]}
                             placeholder="Priority"
                             placeholderTextColor="white"
+                            onChangeText={priorityInputHandler}
                         />
                         <TextInput
                             style={[
@@ -81,6 +92,7 @@ export default function App() {
                             ]}
                             placeholder="Time Required"
                             placeholderTextColor="white"
+                            onChangeText={timeReqInputHandler}
                         />
                     </View>
                     <TouchableOpacity
@@ -92,17 +104,20 @@ export default function App() {
                 </View>
                 <View style={styles.dividerContainer}></View>
                 <View style={styles.todoListContainer}>
-                    {Object.keys(allTaskEntries).map((key) => {
-                        const taskEntry = allTaskEntries[key];
+                    {Object.keys(allTaskEntries).map((key: string) => {
+                        const taskEntry = allTaskEntries[Number(key)];
                         return (
-                            <View key={key}>
-                                <Text style={[styles.genericTextContainer]}>
+                            <View
+                                style={[styles.genericTaskContainer]}
+                                key={key}
+                            >
+                                <Text style={[styles.genericTaskText]}>
                                     Task: {taskEntry.task}
                                 </Text>
-                                <Text style={[styles.genericTextContainer]}>
+                                <Text style={[styles.genericTaskText]}>
                                     Priority: {taskEntry.priority}
                                 </Text>
-                                <Text style={[styles.genericTextContainer]}>
+                                <Text style={[styles.genericTaskText]}>
                                     Time Required: {taskEntry.timeRequired}
                                 </Text>
                             </View>
@@ -173,12 +188,21 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 15,
     },
-    genericTextContainer: {
+    genericText: {
         color: "white",
         fontWeight: "bold",
     },
     genericTitleContainer: {
         fontSize: 20,
         textAlign: "center",
+    },
+    genericTaskContainer: {
+        backgroundColor: "#15101C",
+        marginBottom: 10,
+        padding: 10,
+        borderRadius: 10,
+    },
+    genericTaskText: {
+        color: "#9E78CF",
     },
 });
