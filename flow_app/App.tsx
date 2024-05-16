@@ -26,6 +26,8 @@ export default function App() {
     }))
   }
 
+  function deleteTaskHandler() {}
+
   return (
     <View style={styles.landingScreenContainer}>
       <View style={styles.todoPageContainer}>

@@ -1,3 +1,6 @@
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
+import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StyleSheet, Text, View } from 'react-native'
 
 function TaskItem(item: {
@@ -8,6 +11,8 @@ function TaskItem(item: {
       <Text style={styles.genericTaskText}>{item.item.task}</Text>
       <Text style={styles.genericTaskText}>{item.item.priority}</Text>
       <Text style={styles.genericTaskText}>{item.item.timeRequired}</Text>
+      <FontAwesomeIcon icon={faTrash} color='#9E78CF' />
+      <FontAwesomeIcon icon={faCheck} color='#9E78CF' size={20} />
     </View>
   )
 }
