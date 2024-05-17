@@ -1,9 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
     landingScreenContainer: {
         backgroundColor: '#0D0714',
         height: '100%',
+    },
+    topPageContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+        margin: 'auto',
     },
     dividerContainer: {
         borderBottomColor: '#9E78CF',
@@ -22,7 +28,6 @@ export const styles = StyleSheet.create({
         margin: 'auto',
     },
     completedListContainer: {
-        marginTop: -20,
     },
     genericText: {
         color: 'white',

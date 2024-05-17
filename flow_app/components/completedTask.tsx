@@ -1,7 +1,7 @@
 import { faRotateRight, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Pressable, Text, View } from 'react-native'
-import { styles } from './style/taskContainerStyles'
+import { styles } from '../style/taskContainerStyles'
 
 function CompletedTask(props: any) {
     function permanentDeleteHandler() {

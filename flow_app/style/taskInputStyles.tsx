@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
     todoInputContainer: {
@@ -17,14 +17,21 @@ export const styles = StyleSheet.create({
         color: 'white',
         height: 40,
         marginVertical: 5,
+        fontSize: 15,
     },
+    pickerInput: {
+        backgroundColor: '#1D1825',
+        borderRadius: 10,
+        width: '48.5%',
+        height: 40,
+        marginVertical: 5,
+    },
+    pickerInputText: { color: 'white', top: -5 },
+    pickerItem: { fontSize: 15 },
     todoExtraInfoContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '95%',
-    },
-    textInputAdditional: {
-        width: '48.5%',
     },
     taskSubmitButton: {
         width: '95%',

@@ -1,9 +1,11 @@
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import CompletedTask from './components/completedTask'
-import { styles } from './components/style/landingPageStyles'
 import TaskInput from './components/taskInput'
 import TaskItem from './components/taskItem'
+import { styles } from './style/landingPageStyles'
 
 export default function App() {
     // Task Objects
@@ -67,7 +69,7 @@ export default function App() {
     return (
         <View style={styles.landingScreenContainer}>
             <View style={styles.todoPageContainer}>
-                <View>
+                <View style={styles.topPageContainer}>
                     <Text
                         style={[
                             styles.genericText,
@@ -76,41 +78,49 @@ export default function App() {
                     >
                         My Flow
                     </Text>
+                    <FontAwesomeIcon
+                        icon={faCircleUser}
+                        color='white'
+                        size={30}
+                    />
                 </View>
                 <TaskInput onAddTask={addTaskHandler} />
                 <View style={styles.dividerContainer}></View>
                 <FlatList
-                    data={Object.entries(allTaskEntries)}
+                    data={[
+                        ...Object.entries(allTaskEntries).map(
+                            ([taskId, taskData]) => ({
+                                taskId,
+                                taskData,
+                                completed: false,
+                            }),
+                        ),
+                        ...Object.entries(completedTaskEntries).map(
+                            ([taskId, taskData]) => ({
+                                taskId,
+                                taskData,
+                                completed: true,
+                            }),
+                        ),
+                    ]}
                     renderItem={({ item }) => {
-                        const [taskId, taskData] = item
-                        return (
+                        return item.completed ? (
+                            <CompletedTask
+                                item={item.taskData}
+                                taskId={item.taskId}
+                                onPermanentDeleteTask={permanentDeleteHandler}
+                                onRestoreTask={restoreTaskHandler}
+                            />
+                        ) : (
                             <TaskItem
-                                item={taskData}
-                                taskId={taskId}
+                                item={item.taskData}
+                                taskId={item.taskId}
                                 onDeleteTask={deleteTaskHandler}
                                 onCompletedTask={completedTaskHandler}
                             />
                         )
                     }}
                     style={styles.todoListContainer}
-                />
-                <FlatList
-                    data={Object.entries(completedTaskEntries)}
-                    renderItem={({ item }) => {
-                        const [taskId, taskData] = item
-                        return (
-                            <CompletedTask
-                                item={taskData}
-                                taskId={taskId}
-                                onPermanentDeleteTask={permanentDeleteHandler}
-                                onRestoreTask={restoreTaskHandler}
-                            />
-                        )
-                    }}
-                    style={[
-                        styles.todoListContainer,
-                        styles.completedListContainer,
-                    ]}
                 />
             </View>
         </View>
