@@ -8,17 +8,17 @@ export default function App() {
   const [allTaskEntries, setTasks] = useState<{
     [key: number]: { task: string; priority: string; timeRequired: string }
   }>({})
-  const [counter, setCounter] = useState(0)
+  const [taskId, setTaskId] = useState(0)
 
   function addTaskHandler(
     enteredTaskText: string,
     enteredPriority: string,
     enteredTimeReq: string,
   ) {
-    setCounter(prevCounter => prevCounter + 1)
+    setTaskId(Math.random())
     setTasks(prevTasks => ({
       ...prevTasks,
-      [counter]: {
+      [taskId]: {
         task: enteredTaskText,
         priority: enteredPriority,
         timeRequired: enteredTimeReq,
@@ -26,7 +26,11 @@ export default function App() {
     }))
   }
 
-  function deleteTaskHandler() {}
+  function deleteTaskHandler(taskId: number) {
+    const updatedTasks = { ...allTaskEntries }
+    delete updatedTasks[taskId]
+    setTasks(updatedTasks)
+  }
 
   return (
     <View style={styles.landingScreenContainer}>
@@ -39,9 +43,16 @@ export default function App() {
         <TaskInput onAddTask={addTaskHandler} />
         <View style={styles.dividerContainer}></View>
         <FlatList
-          data={Object.values(allTaskEntries)}
+          data={Object.entries(allTaskEntries)}
           renderItem={({ item }) => {
-            return <TaskItem item={item} />
+            const [taskId, taskData] = item
+            return (
+              <TaskItem
+                item={taskData}
+                taskId={taskId}
+                onDeleteTask={deleteTaskHandler}
+              />
+            )
           }}
           style={styles.todoListContainer}
         />
