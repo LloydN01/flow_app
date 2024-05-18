@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native'
+import { GLOBAL_COLOURS } from '../constants/colour'
 
 export const styles = StyleSheet.create({
     landingScreenContainer: {
-        backgroundColor: '#0D0714',
+        backgroundColor: GLOBAL_COLOURS.DARK_NAVY,
         height: '100%',
         paddingTop: 5,
     },
@@ -13,7 +14,7 @@ export const styles = StyleSheet.create({
         margin: 'auto',
     },
     dividerContainer: {
-        borderBottomColor: '#9E78CF',
+        borderBottomColor: GLOBAL_COLOURS.PURPLE_TEXT,
         borderBottomWidth: 2,
         width: '90%',
         alignSelf: 'center',
@@ -44,5 +45,9 @@ export const styles = StyleSheet.create({
         color: '#9E78CF',
         fontWeight: 'bold',
         margin: 'auto',
+    },
+    bottomSection: {
+        height: '100%',
+        width: '100%',
     },
 })

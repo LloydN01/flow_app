@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native'
+import { GLOBAL_COLOURS } from '../constants/colour'
 
 export const styles = StyleSheet.create({
     genericTaskContainer: {
         flexDirection: 'column',
-        backgroundColor: '#15101C',
+        backgroundColor: GLOBAL_COLOURS.LIGHT_NAVY,
         marginBottom: 10,
         padding: 10,
         borderRadius: 10,

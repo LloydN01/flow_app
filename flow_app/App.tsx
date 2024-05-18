@@ -1,49 +1,65 @@
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, Text, View } from 'react-native'
-import { Provider } from 'react-redux'
 import CompletedTask from './components/completedTask'
 import TaskInput from './components/taskInput'
 import TaskItem from './components/taskItem'
-import { Task, TaskEntries } from './constants/interfaces'
+import { Task, TaskEntry } from './constants/interfaces'
 import { styles } from './style/landingPageStyles'
-import { storeTask } from './util/http'
+import { deleteTask, fetchTasks, storeTask } from './util/http'
 
 export default function App() {
     // Task Objects
-    const [allTaskEntries, setTasks] = useState<TaskEntries>({})
-    const [taskId, setTaskId] = useState(0)
-
+    const [allTaskEntries, setTasks] = useState<TaskEntry>({})
     // Completed Task Objects
-    const [completedTaskEntries, setCompletedTasks] = useState<TaskEntries>({})
+    const [completedTaskEntries, setCompletedTasks] = useState<TaskEntry>({})
+    // Refreshing
+    const [isRefreshing, setRefreshing] = useState(false)
 
-    function addTaskHandler(
-        enteredTaskText: string,
-        enteredPriority: string,
-        enteredTimeReq: string,
-    ) {
-        setTaskId(Math.random())
+    useEffect(() => {
+        refreshAllTasks()
+    }, [])
 
-        const newTask: Task = {
-            task: enteredTaskText,
-            priority: enteredPriority,
-            timeRequired: enteredTimeReq,
-        }
-
-        setTasks(prevTasks => ({
-            ...prevTasks,
-            [taskId]: newTask,
-        }))
-
-        storeTask(newTask)
+    function refreshAllTasks() {
+        getTasks()
+        getCompletedTasks()
     }
 
+    const getTasks = async () => {
+        setRefreshing(true)
+        const tasks = await fetchTasks()
+        setRefreshing(false)
+        const newTasks: TaskEntry = {}
+        tasks.forEach(task => {
+            const taskId = Object.keys(task)[0]
+            const taskData = task[taskId]
+            newTasks[taskId] = taskData
+        })
+        setTasks(newTasks)
+    }
+
+    const getCompletedTasks = async () => {
+        setRefreshing(true)
+        const tasks = await fetchTasks(true)
+        setRefreshing(false)
+        const newTasks: TaskEntry = {}
+        tasks.forEach(task => {
+            const taskId = Object.keys(task)[0]
+            const taskData = task[taskId]
+            newTasks[taskId] = taskData
+        })
+        setCompletedTasks(newTasks)
+    }
+
+    // Empty Task Collection Notice
     let taskCollectionScreen = (
-        <Text style={[styles.showEmptySign]}>
-            Add your first task to the flow!
-        </Text>
+        <View style={styles.todoListContainer}>
+            <Text style={[styles.showEmptySign]}>
+                Add your first task to the flow!
+            </Text>
+        </View>
     )
 
     if (
@@ -53,28 +69,51 @@ export default function App() {
         taskCollectionScreen = <Text style={styles.hideEmptySign}></Text>
     }
 
-    function deleteTaskHandler(taskId: number) {
+    // Helper functions
+    async function addTaskHandler(
+        enteredTaskText: string,
+        enteredPriority: string,
+        enteredTimeReq: string,
+    ) {
+        const newTask: Task = {
+            task: enteredTaskText,
+            priority: enteredPriority,
+            timeRequired: enteredTimeReq,
+        }
+
+        const taskId = await storeTask(newTask)
+
+        setTasks(prevTasks => ({
+            ...prevTasks,
+            [taskId]: newTask,
+        }))
+    }
+
+    async function deleteTaskHandler(taskId: string) {
+        await deleteTask(taskId)
         const updatedTasks = { ...allTaskEntries }
         delete updatedTasks[taskId]
         setTasks(updatedTasks)
     }
 
-    function completedTaskHandler(taskId: number) {
+    async function completedTaskHandler(taskId: string) {
+        deleteTaskHandler(taskId)
         const completedTask = allTaskEntries[taskId]
+        const newTaskId = await storeTask(completedTask, true)
         setCompletedTasks(prevTasks => ({
             ...prevTasks,
-            [taskId]: completedTask,
+            [newTaskId]: completedTask,
         }))
-        deleteTaskHandler(taskId)
     }
 
-    function permanentDeleteHandler(taskId: number) {
+    async function permanentDeleteHandler(taskId: string) {
+        await deleteTask(taskId, true)
         const completedTasks = { ...completedTaskEntries }
         delete completedTasks[taskId]
         setCompletedTasks(completedTasks)
     }
 
-    function restoreTaskHandler(taskId: number) {
+    function restoreTaskHandler(taskId: string) {
         const completedTask = completedTaskEntries[taskId]
         addTaskHandler(
             completedTask.task,
@@ -88,26 +127,28 @@ export default function App() {
         <>
             <SafeAreaView>
                 <StatusBar style='light' />
-                <Provider store={store}>
-                    <View style={styles.landingScreenContainer}>
-                        <View style={styles.todoPageContainer}>
-                            <View style={styles.topPageContainer}>
-                                <Text
-                                    style={[
-                                        styles.genericText,
-                                        styles.genericTitleContainer,
-                                    ]}
-                                >
-                                    My Flow
-                                </Text>
-                                <FontAwesomeIcon
-                                    icon={faCircleUser}
-                                    color='white'
-                                    size={30}
-                                />
-                            </View>
-                            <TaskInput onAddTask={addTaskHandler} />
-                            <View style={styles.dividerContainer}></View>
+                <View style={styles.landingScreenContainer}>
+                    <View style={styles.todoPageContainer}>
+                        <View style={styles.topPageContainer}>
+                            <Text
+                                style={[
+                                    styles.genericText,
+                                    styles.genericTitleContainer,
+                                ]}
+                            >
+                                My Flow
+                            </Text>
+                            <FontAwesomeIcon
+                                icon={faCircleUser}
+                                color='white'
+                                size={30}
+                            />
+                        </View>
+                        <TaskInput onAddTask={addTaskHandler} />
+                    </View>
+                    <View style={styles.dividerContainer}></View>
+                    <View>
+                        <View style={styles.bottomSection}>
                             {taskCollectionScreen}
                             <FlatList
                                 data={[
@@ -148,10 +189,12 @@ export default function App() {
                                     )
                                 }}
                                 style={styles.todoListContainer}
+                                onRefresh={refreshAllTasks}
+                                refreshing={isRefreshing}
                             />
                         </View>
                     </View>
-                </Provider>
+                </View>
             </SafeAreaView>
         </>
     )
