@@ -15,14 +15,12 @@ function TaskItem(props: any) {
     return (
         <View style={styles.genericTaskContainer}>
             <Text style={styles.genericTaskText}>{props.item.task}</Text>
-            <View style={styles.genericSubTaskContainer}>
-                <Text style={styles.genericTaskText}>
-                    Priority: {props.item.priority}
-                </Text>
-                <Text style={styles.genericTaskText}>
-                    Time Requirement: {props.item.timeRequired}
-                </Text>
-            </View>
+            <Text style={styles.genericTaskText}>
+                Priority: {props.item.priority}
+            </Text>
+            <Text style={styles.genericTaskText}>
+                Time Requirement: {props.item.timeRequired}
+            </Text>
             <View style={styles.genericSubTaskContainer}>
                 <Pressable onPress={deleteTaskHandler}>
                     <FontAwesomeIcon icon={faTrash} color='#9E78CF' />

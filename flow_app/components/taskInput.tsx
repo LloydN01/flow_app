@@ -32,10 +32,12 @@ function TaskInput(props: TaskInputProps) {
     }
 
     function addTaskHandler() {
-        props.onAddTask(enteredTaskText, enteredPriority, enteredTimeReq)
-        setEnteredTaskText('')
-        setEnteredPriority('')
-        setTimeReq('')
+        if (enteredTaskText && enteredPriority && enteredTimeReq) {
+            props.onAddTask(enteredTaskText, enteredPriority, enteredTimeReq)
+            setEnteredTaskText('')
+            setEnteredPriority('')
+            setTimeReq('')
+        }
     }
 
     return (

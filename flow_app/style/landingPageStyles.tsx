@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
     landingScreenContainer: {
         backgroundColor: '#0D0714',
         height: '100%',
+        paddingTop: 10,
     },
     topPageContainer: {
         flexDirection: 'row',
@@ -27,8 +28,7 @@ export const styles = StyleSheet.create({
         width: '90%',
         margin: 'auto',
     },
-    completedListContainer: {
-    },
+    completedListContainer: {},
     genericText: {
         color: 'white',
         fontWeight: 'bold',
@@ -36,5 +36,13 @@ export const styles = StyleSheet.create({
     genericTitleContainer: {
         fontSize: 20,
         textAlign: 'center',
+    },
+    hideEmptySign: {
+        display: 'none',
+    },
+    showEmptySign: {
+        color: '#9E78CF',
+        fontWeight: 'bold',
+        margin: 'auto',
     },
 })

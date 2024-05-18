@@ -17,14 +17,12 @@ function CompletedTask(props: any) {
             <Text style={styles.genericCompletedTaskText}>
                 {props.item.task}
             </Text>
-            <View style={styles.genericSubTaskContainer}>
-                <Text style={styles.genericCompletedTaskText}>
-                    Priority: {props.item.priority}
-                </Text>
-                <Text style={styles.genericCompletedTaskText}>
-                    Time Requirement: {props.item.timeRequired}
-                </Text>
-            </View>
+            <Text style={styles.genericCompletedTaskText}>
+                Priority: {props.item.priority}
+            </Text>
+            <Text style={styles.genericCompletedTaskText}>
+                Time Requirement: {props.item.timeRequired}
+            </Text>
             <View style={styles.genericSubTaskContainer}>
                 <Pressable onPress={permanentDeleteHandler}>
                     <FontAwesomeIcon icon={faTrash} color='#78CFB0' />
