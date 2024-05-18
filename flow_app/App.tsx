@@ -3,22 +3,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { FlatList, SafeAreaView, Text, View } from 'react-native'
+import { Provider } from 'react-redux'
 import CompletedTask from './components/completedTask'
 import TaskInput from './components/taskInput'
 import TaskItem from './components/taskItem'
+import { Task, TaskEntries } from './constants/interfaces'
 import { styles } from './style/landingPageStyles'
+import { storeTask } from './util/http'
 
 export default function App() {
     // Task Objects
-    const [allTaskEntries, setTasks] = useState<{
-        [key: number]: { task: string; priority: string; timeRequired: string }
-    }>({})
+    const [allTaskEntries, setTasks] = useState<TaskEntries>({})
     const [taskId, setTaskId] = useState(0)
 
     // Completed Task Objects
-    const [completedTaskEntries, setCompletedTasks] = useState<{
-        [key: number]: { task: string; priority: string; timeRequired: string }
-    }>({})
+    const [completedTaskEntries, setCompletedTasks] = useState<TaskEntries>({})
 
     function addTaskHandler(
         enteredTaskText: string,
@@ -26,14 +25,19 @@ export default function App() {
         enteredTimeReq: string,
     ) {
         setTaskId(Math.random())
+
+        const newTask: Task = {
+            task: enteredTaskText,
+            priority: enteredPriority,
+            timeRequired: enteredTimeReq,
+        }
+
         setTasks(prevTasks => ({
             ...prevTasks,
-            [taskId]: {
-                task: enteredTaskText,
-                priority: enteredPriority,
-                timeRequired: enteredTimeReq,
-            },
+            [taskId]: newTask,
         }))
+
+        storeTask(newTask)
     }
 
     let taskCollectionScreen = (
@@ -84,66 +88,70 @@ export default function App() {
         <>
             <SafeAreaView>
                 <StatusBar style='light' />
-                <View style={styles.landingScreenContainer}>
-                    <View style={styles.todoPageContainer}>
-                        <View style={styles.topPageContainer}>
-                            <Text
-                                style={[
-                                    styles.genericText,
-                                    styles.genericTitleContainer,
+                <Provider store={store}>
+                    <View style={styles.landingScreenContainer}>
+                        <View style={styles.todoPageContainer}>
+                            <View style={styles.topPageContainer}>
+                                <Text
+                                    style={[
+                                        styles.genericText,
+                                        styles.genericTitleContainer,
+                                    ]}
+                                >
+                                    My Flow
+                                </Text>
+                                <FontAwesomeIcon
+                                    icon={faCircleUser}
+                                    color='white'
+                                    size={30}
+                                />
+                            </View>
+                            <TaskInput onAddTask={addTaskHandler} />
+                            <View style={styles.dividerContainer}></View>
+                            {taskCollectionScreen}
+                            <FlatList
+                                data={[
+                                    ...Object.entries(allTaskEntries).map(
+                                        ([taskId, taskData]) => ({
+                                            taskId,
+                                            taskData,
+                                            completed: false,
+                                        }),
+                                    ),
+                                    ...Object.entries(completedTaskEntries).map(
+                                        ([taskId, taskData]) => ({
+                                            taskId,
+                                            taskData,
+                                            completed: true,
+                                        }),
+                                    ),
                                 ]}
-                            >
-                                My Flow
-                            </Text>
-                            <FontAwesomeIcon
-                                icon={faCircleUser}
-                                color='white'
-                                size={30}
+                                renderItem={({ item }) => {
+                                    return item.completed ? (
+                                        <CompletedTask
+                                            item={item.taskData}
+                                            taskId={item.taskId}
+                                            onPermanentDeleteTask={
+                                                permanentDeleteHandler
+                                            }
+                                            onRestoreTask={restoreTaskHandler}
+                                        />
+                                    ) : (
+                                        <TaskItem
+                                            item={item.taskData}
+                                            taskId={item.taskId}
+                                            onDeleteTask={deleteTaskHandler}
+                                            onCompletedTask={
+                                                completedTaskHandler
+                                            }
+                                        />
+                                    )
+                                }}
+                                style={styles.todoListContainer}
                             />
                         </View>
-                        <TaskInput onAddTask={addTaskHandler} />
-                        <View style={styles.dividerContainer}></View>
-                        {taskCollectionScreen}
-                        <FlatList
-                            data={[
-                                ...Object.entries(allTaskEntries).map(
-                                    ([taskId, taskData]) => ({
-                                        taskId,
-                                        taskData,
-                                        completed: false,
-                                    }),
-                                ),
-                                ...Object.entries(completedTaskEntries).map(
-                                    ([taskId, taskData]) => ({
-                                        taskId,
-                                        taskData,
-                                        completed: true,
-                                    }),
-                                ),
-                            ]}
-                            renderItem={({ item }) => {
-                                return item.completed ? (
-                                    <CompletedTask
-                                        item={item.taskData}
-                                        taskId={item.taskId}
-                                        onPermanentDeleteTask={
-                                            permanentDeleteHandler
-                                        }
-                                        onRestoreTask={restoreTaskHandler}
-                                    />
-                                ) : (
-                                    <TaskItem
-                                        item={item.taskData}
-                                        taskId={item.taskId}
-                                        onDeleteTask={deleteTaskHandler}
-                                        onCompletedTask={completedTaskHandler}
-                                    />
-                                )
-                            }}
-                            style={styles.todoListContainer}
-                        />
                     </View>
-                </View>
+                </Provider>
             </SafeAreaView>
         </>
     )

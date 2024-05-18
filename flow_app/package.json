@@ -1,55 +1,55 @@
 {
-  "name": "flow_app",
-  "version": "1.0.0",
-  "main": "expo/AppEntry.js",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.2",
-    "@fortawesome/free-brands-svg-icons": "^6.5.2",
-    "@fortawesome/free-regular-svg-icons": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@fortawesome/react-native-fontawesome": "^0.3.0",
-    "expo": "~51.0.6",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.1",
-    "react-native-simple-picker": "^3.1.4",
-    "react-native-svg": "^15.3.0",
-    "@react-native-picker/picker": "2.7.5"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@tsconfig/react-native": "^3.0.5",
-    "@types/jest": "^29.5.12",
-    "@types/react": "^18.3.2",
-    "@types/react-test-renderer": "^18.3.0",
-    "prettier-plugin-organize-imports": "^3.2.4",
-    "typescript": "^5.4.5"
-  },
-  "private": true,
-  "prettier": {
-    "arrowParens": "avoid",
-    "bracketSpacing": true,
-    "htmlWhitespaceSensitivity": "css",
-    "insertPragma": false,
-    "jsxBracketSameLine": false,
-    "jsxSingleQuote": true,
-    "printWidth": 80,
-    "proseWrap": "always",
-    "quoteProps": "as-needed",
-    "requirePragma": false,
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 4,
-    "trailingComma": "all",
-    "useTabs": false,
-    "plugins": [
-      "prettier-plugin-organize-imports"
-    ]
-  }
+    "name": "flow_app",
+    "version": "1.0.0",
+    "main": "expo/AppEntry.js",
+    "scripts": {
+        "start": "expo start",
+        "android": "expo start --android",
+        "ios": "expo start --ios",
+        "web": "expo start --web"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.5.2",
+        "@fortawesome/free-brands-svg-icons": "^6.5.2",
+        "@fortawesome/free-regular-svg-icons": "^6.5.2",
+        "@fortawesome/free-solid-svg-icons": "^6.5.2",
+        "@fortawesome/react-native-fontawesome": "^0.3.0",
+        "@react-native-picker/picker": "2.7.5",
+        "axios": "^1.6.8",
+        "expo": "~51.0.6",
+        "expo-status-bar": "~1.12.1",
+        "react": "18.2.0",
+        "react-native": "0.74.1",
+        "react-native-svg": "^15.3.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.20.0",
+        "@tsconfig/react-native": "^3.0.5",
+        "@types/jest": "^29.5.12",
+        "@types/react": "^18.3.2",
+        "@types/react-test-renderer": "^18.3.0",
+        "prettier-plugin-organize-imports": "^3.2.4",
+        "typescript": "^5.4.5"
+    },
+    "private": true,
+    "prettier": {
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "htmlWhitespaceSensitivity": "css",
+        "insertPragma": false,
+        "jsxBracketSameLine": false,
+        "jsxSingleQuote": true,
+        "printWidth": 80,
+        "proseWrap": "always",
+        "quoteProps": "as-needed",
+        "requirePragma": false,
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "all",
+        "useTabs": false,
+        "plugins": [
+            "prettier-plugin-organize-imports"
+        ]
+    }
 }

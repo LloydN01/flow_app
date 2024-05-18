@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
     landingScreenContainer: {
         backgroundColor: '#0D0714',
         height: '100%',
-        paddingTop: 10,
+        paddingTop: 5,
     },
     topPageContainer: {
         flexDirection: 'row',
