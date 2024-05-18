@@ -1,0 +1,5 @@
+export const GLOBAL_COLOURS = {
+    DARK_NAVY: '#0D0714',
+    LIGHT_NAVY: '#15101C',
+    PURPLE_TEXT: '#9E78CF',
+}
