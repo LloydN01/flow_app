@@ -1,2 +1,1 @@
-export const BACKEND_URL =
-    'https://flow-app-61c32-default-rtdb.asia-southeast1.firebasedatabase.app'
+export const BACKEND_URL = 'http://192.168.0.25:3000'

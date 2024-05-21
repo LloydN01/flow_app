@@ -3,14 +3,14 @@ import { BACKEND_URL } from '../constants/back-end-urls'
 import { Task, TaskEntry } from '../constants/interfaces'
 
 export async function storeTask(taskData: Task, isComplete: boolean = false) {
-    const route = isComplete ? '/completed-tasks.json' : '/tasks.json'
+    const route = isComplete ? '/add-completed-tasks' : '/add-tasks'
     const response = await axios.post(BACKEND_URL + route, taskData)
-    const id = response.data.name
+    const id = response.data.taskId
     return id
 }
 
 export async function fetchTasks(isComplete: boolean = false) {
-    const route = isComplete ? '/completed-tasks.json' : '/tasks.json'
+    const route = isComplete ? '/get-completed-tasks' : '/get-tasks'
     const response = await axios.get(BACKEND_URL + route)
 
     const tasks = []
@@ -29,8 +29,6 @@ export async function fetchTasks(isComplete: boolean = false) {
 }
 
 export function deleteTask(id: string, isComplete: boolean = false) {
-    const route = isComplete
-        ? `/completed-tasks/${id}.json`
-        : `/tasks/${id}.json`
+    const route = isComplete ? `/completed-tasks/${id}` : `/tasks/${id}`
     return axios.delete(BACKEND_URL + route)
 }
