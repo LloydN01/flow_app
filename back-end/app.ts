@@ -1,9 +1,13 @@
-const express = require('express')
+import { mongoConnect } from './util/database'
 
+const express = require('express')
 const app = express()
 
 const taskRoutes = require('./routes/task.ts')
 
 app.use(taskRoutes)
 
-app.listen(3000)
+mongoConnect((client: Function) => {
+    console.log(client)
+    app.listen(3000)
+})

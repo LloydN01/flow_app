@@ -3,11 +3,6 @@
 # dependencies
 node_modules/
 
-# Expo
-.expo/
-dist/
-web-build/
-
 # debug
 npm-debug.*
 yarn-debug.*
@@ -22,3 +17,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# dot env
+.env
