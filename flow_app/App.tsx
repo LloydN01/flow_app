@@ -29,7 +29,7 @@ export default function App() {
 
     const getTasks = async () => {
         setRefreshing(true)
-        const tasks = await fetchTasks()
+        const tasks = await fetchTasks(false)
         setRefreshing(false)
         const newTasks: TaskEntry = {}
         tasks.forEach(task => {

@@ -30,8 +30,6 @@ exports.postAddTasks = (req: Request, res: Response, next: NextFunction) => {
     taskObj
         .save()
         .then((result: any) => {
-            console.log('Created New Task')
-            console.log(result)
             const id = result._id.toString()
             res.send({ taskId: id })
         })
@@ -66,8 +64,6 @@ exports.postAddCompletedTasks = (
     compeltedTaskObj
         .save()
         .then((result: any) => {
-            console.log('Created New Task')
-            console.log(result)
             const id = result._id.toString()
             res.send({ taskId: id })
         })
@@ -104,6 +100,26 @@ exports.deleteTaskById = (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
 
     Task.findByIdAndDelete(id)
+        .then((result: TaskDocument) => {
+            if (!result) {
+                return res.status(404).json({ error: 'Task not found' })
+            }
+            res.status(200).json({ message: 'Task deleted', task: result })
+        })
+        .catch((err: any) => {
+            console.error(err)
+            res.status(500).json({ error: 'Internal server error' })
+        })
+}
+
+exports.deleteCompletedTaskById = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const id = req.params.id
+
+    CompeltedTask.findByIdAndDelete(id)
         .then((result: TaskDocument) => {
             if (!result) {
                 return res.status(404).json({ error: 'Task not found' })

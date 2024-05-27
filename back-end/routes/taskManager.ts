@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import express, { NextFunction, Request, Response } from 'express'
+import express from 'express'
 
 const router = express.Router()
 const taskManager = require('../controllers/taskManager')
@@ -24,12 +24,6 @@ router.get('/get-completed-tasks', taskManager.getCompletedTasks)
 router.delete('/tasks/:id', taskManager.deleteTaskById)
 
 // DELETE endpoint for deleting completed tasks
-router.delete(
-    '/completed-tasks/:id',
-    (req: Request, res: Response, next: NextFunction) => {
-        const id = req.params.id
-        console.log(id)
-    },
-)
+router.delete('/completed-tasks/:id', taskManager.deleteCompletedTaskById)
 
 module.exports = router
