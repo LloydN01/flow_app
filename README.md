@@ -4,7 +4,7 @@
 
 1. **Navigate to the `backend` folder:**
     ```bash
-    cd backend
+    cd back-end
     ```
 
 2. **Install dependencies:**
@@ -35,7 +35,7 @@
 
 1. **Navigate to the `frontend` folder:**
     ```bash
-    cd frontend
+    cd flow_app
     ```
 
 2. **Install dependencies:**
