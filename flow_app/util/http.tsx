@@ -30,5 +30,6 @@ export async function fetchTasks(isComplete: boolean = false) {
 
 export function deleteTask(id: string, isComplete: boolean = false) {
     const route = isComplete ? `/completed-tasks/${id}` : `/tasks/${id}`
+    console.log(id)
     return axios.delete(BACKEND_URL + route)
 }
