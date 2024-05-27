@@ -1,7 +1,11 @@
-export interface TaskRequestBody {
+import { ObjectId } from 'mongodb'
+
+interface TaskDocument {
+    _id: ObjectId
     task: string
     priority: string
     timeRequired: string
+    __v: number
 }
 
-export interface TaskDocument extends Document, TaskRequestBody {}
+export default TaskDocument
