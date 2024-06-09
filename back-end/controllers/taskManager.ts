@@ -127,9 +127,7 @@ exports.postAddCompletedTasks = (
 exports.getTasks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const tasks: TaskDocument[] = await Task.find()
-        console.log(tasks)
         const orderedTasks: TaskDocument[] = tasks.sort(orderTasks)
-        console.log(orderedTasks)
         res.status(200).json(orderedTasks)
     } catch (err) {
         handleSaveError(res, err)
