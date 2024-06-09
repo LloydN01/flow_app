@@ -1,7 +1,59 @@
 import { NextFunction, Request, Response } from 'express'
-import { TaskDocument, TaskRequestBody } from '../models/http-interfaces'
+import OpenAI from 'openai'
+import { priorityMap, timeMap } from '../constants/mapping'
+import TaskDocument from '../models/http-interfaces'
+
 const Task = require('../models/task')
 const CompeltedTask = require('../models/completedTask')
+const openai = new OpenAI()
+
+// LEGACY CODE:
+// async function orderTasks(tasks: TaskDocument[]): Promise<TaskDocument[]> {
+//     const completion = await openai.chat.completions.create({
+//         messages: [
+//             {
+//                 role: 'system',
+//                 content: `
+//                 You are a personal assistant designed to output JSON with the following structure:
+//                 [
+//                     {"priority": "priority", "timeRequired": "timeRequired", "task": "task", "_id": "_id", "__v": "__v"},
+//                     ...
+//                 ]
+//                 `,
+//             },
+//             {
+//                 role: 'user',
+//                 content: `
+//                 Here are some tasks with their priorities and time required to complete:
+//                 ${tasks.map(task => `Priority: ${task.priority}, Time Required: ${task.timeRequired}, Task: ${task.task}, _id: ${task._id}, __v: ${task.__v}`).join('\n')}
+//                 If there are no tasks, return an empty JSON.
+//                 Sort the tasks by priority highest to lowest. You should consider the time required and the priority values.
+//                 `,
+//             },
+//         ],
+//         model: 'gpt-3.5-turbo',
+//         response_format: { type: `json_object` },
+//     })
+
+//     const orderedTasks: TaskDocument[] = JSON.parse(
+//         completion.choices[0].message.content || '',
+//     ).tasks
+//     console.log(orderedTasks)
+//     return orderedTasks
+// }
+
+function orderTasks(a: TaskDocument, b: TaskDocument): number {
+    const priorityA = priorityMap[a.priority]
+    const priorityB = priorityMap[b.priority]
+    const timeA = timeMap[a.timeRequired]
+    const timeB = timeMap[b.timeRequired]
+
+    if (priorityA !== priorityB) {
+        return priorityA - priorityB
+    }
+
+    return timeA - timeB
+}
 
 const handleSaveError = (res: Response, err: any) => {
     console.error(err)
@@ -9,7 +61,7 @@ const handleSaveError = (res: Response, err: any) => {
 }
 
 exports.postAddTasks = (req: Request, res: Response, next: NextFunction) => {
-    const body = req.body as TaskRequestBody | null
+    const body = req.body as TaskDocument | null
 
     if (!body) {
         return res.status(400).json({ error: 'Request body is null' })
@@ -43,7 +95,7 @@ exports.postAddCompletedTasks = (
     res: Response,
     next: NextFunction,
 ) => {
-    const body = req.body as TaskRequestBody | null
+    const body = req.body as TaskDocument | null
 
     if (!body) {
         return res.status(400).json({ error: 'Request body is null' })
@@ -72,14 +124,14 @@ exports.postAddCompletedTasks = (
         })
 }
 
-exports.getTasks = (req: Request, res: Response, next: NextFunction) => {
-    Task.find()
-        .then((tasks: TaskDocument[]) => {
-            res.status(200).json(tasks)
-        })
-        .catch((err: any) => {
-            handleSaveError(res, err)
-        })
+exports.getTasks = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const tasks: TaskDocument[] = await Task.find()
+        const orderedTasks: TaskDocument[] = tasks.sort(orderTasks)
+        res.status(200).json(orderedTasks)
+    } catch (err) {
+        handleSaveError(res, err)
+    }
 }
 
 exports.getCompletedTasks = (
