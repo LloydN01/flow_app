@@ -80,37 +80,25 @@ export default function App() {
             priority: enteredPriority,
             timeRequired: enteredTimeReq,
         }
-
-        const taskId = await storeTask(newTask)
-
-        setTasks(prevTasks => ({
-            ...prevTasks,
-            [taskId]: newTask,
-        }))
+        await storeTask(newTask)
+        refreshAllTasks()
     }
 
     async function deleteTaskHandler(taskId: string) {
         await deleteTask(taskId)
-        const updatedTasks = { ...allTaskEntries }
-        delete updatedTasks[taskId]
-        setTasks(updatedTasks)
+        refreshAllTasks()
     }
 
     async function completedTaskHandler(taskId: string) {
         deleteTaskHandler(taskId)
         const completedTask = allTaskEntries[taskId]
-        const newTaskId = await storeTask(completedTask, true)
-        setCompletedTasks(prevTasks => ({
-            ...prevTasks,
-            [newTaskId]: completedTask,
-        }))
+        await storeTask(completedTask, true)
+        refreshAllTasks()
     }
 
     async function permanentDeleteHandler(taskId: string) {
         await deleteTask(taskId, true)
-        const completedTasks = { ...completedTaskEntries }
-        delete completedTasks[taskId]
-        setCompletedTasks(completedTasks)
+        refreshAllTasks()
     }
 
     function restoreTaskHandler(taskId: string) {
